@@ -1,0 +1,370 @@
+<title>Totem Intake Validator</title>
+<style>
+:root{
+  --bg:#F7F8FA; --card:#FFFFFF; --ink:#16181D; --ink2:#5B6472; --line:#E2E5EA;
+  --accent:#3b82f6; --accent-ink:#1d4ed8;
+  --pass:#188044; --pass-bg:#E5F4EB; --warn:#9A6700; --warn-bg:#FBF0DB;
+  --fail:#C2362B; --fail-bg:#FAE7E5; --empty:#B45309; --empty-bg:#FDF2E3;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#14161A; --card:#1C1F25; --ink:#E7EAEE; --ink2:#98A1AD; --line:#2A2E36;
+  --accent:#5B9BF8; --accent-ink:#8FBBFA;
+  --pass:#4CC077; --pass-bg:#1A2E22; --warn:#E0B34C; --warn-bg:#2E2717;
+  --fail:#F07A6E; --fail-bg:#34201D; --empty:#E09E4C; --empty-bg:#2E2417;
+}}
+:root[data-theme="dark"]{
+  --bg:#14161A; --card:#1C1F25; --ink:#E7EAEE; --ink2:#98A1AD; --line:#2A2E36;
+  --accent:#5B9BF8; --accent-ink:#8FBBFA;
+  --pass:#4CC077; --pass-bg:#1A2E22; --warn:#E0B34C; --warn-bg:#2E2717;
+  --fail:#F07A6E; --fail-bg:#34201D; --empty:#E09E4C; --empty-bg:#2E2417;
+}
+:root[data-theme="light"]{
+  --bg:#F7F8FA; --card:#FFFFFF; --ink:#16181D; --ink2:#5B6472; --line:#E2E5EA;
+  --accent:#3b82f6; --accent-ink:#1d4ed8;
+  --pass:#188044; --pass-bg:#E5F4EB; --warn:#9A6700; --warn-bg:#FBF0DB;
+  --fail:#C2362B; --fail-bg:#FAE7E5; --empty:#B45309; --empty-bg:#FDF2E3;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.5 "Segoe UI",-apple-system,"SF Pro Text",system-ui,sans-serif;padding-bottom:4rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{border-bottom:3px solid var(--accent);padding:1.6rem 0 1rem;margin-bottom:1.2rem}
+.eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-ink)}
+h1{margin:.15rem 0 .2rem;font-size:1.7rem;letter-spacing:-.01em}
+.sub{color:var(--ink2);margin:0;max-width:64ch}
+h2{font-size:1.05rem;margin:1.6rem 0 .6rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem}
+.cfg{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.9rem}
+.cfg label{display:block;font-size:.72rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--ink2);margin-bottom:.3rem}
+.cfg input{width:100%;padding:.42rem .55rem;border:1px solid var(--line);border-radius:7px;
+  background:var(--bg);color:var(--ink);font:inherit;font-variant-numeric:tabular-nums}
+.cfg input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.days{display:flex;gap:.35rem;flex-wrap:wrap}
+.days button{font:inherit;font-size:.82rem;font-weight:600;padding:.25rem .6rem;border-radius:999px;
+  border:1px solid var(--line);background:var(--bg);color:var(--ink2);cursor:pointer}
+.days button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.days button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#drop{margin-top:1.2rem;border:2px dashed var(--line);border-radius:12px;padding:2.2rem 1rem;
+  text-align:center;color:var(--ink2);cursor:pointer;transition:border-color .15s,background .15s}
+#drop.hover{border-color:var(--accent);background:var(--card)}
+#drop b{color:var(--ink)}
+#drop input{display:none}
+.stats{display:flex;gap:1.6rem;flex-wrap:wrap;margin:1rem 0 .4rem}
+.stat b{font-size:1.35rem;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--ink2)}
+.stat.p b{color:var(--pass)} .stat.w b{color:var(--warn)} .stat.f b{color:var(--fail)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th{position:sticky;top:0;background:var(--card);text-align:left;font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--ink2);padding:.5rem .7rem;border-bottom:1px solid var(--line)}
+td{padding:.45rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.fn{font-family:Consolas,ui-monospace,monospace;font-size:.78rem;word-break:break-all;max-width:340px}
+.pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.05em;padding:.12rem .5rem;border-radius:999px}
+.pill.pass{background:var(--pass-bg);color:var(--pass)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.fail{background:var(--fail-bg);color:var(--fail)}
+.why{margin:.15rem 0 0;padding-left:1.05rem;color:var(--ink2);font-size:.8rem}
+.why li.f{color:var(--fail)} .why li.w{color:var(--warn)}
+.gridwrap{overflow-x:auto}
+table.cov td,table.cov th{text-align:center;padding:.3rem .55rem;font-variant-numeric:tabular-nums}
+table.cov th.rowh{text-align:left}
+td.c0{background:var(--empty-bg);color:var(--empty);font-weight:700}
+td.cN{background:var(--pass-bg);color:var(--pass);font-weight:600}
+.actions{display:flex;gap:.6rem;margin:1rem 0;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;padding:.5rem .95rem;border-radius:8px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.note{color:var(--ink2);font-size:.82rem;max-width:70ch}
+.spec{font-family:Consolas,ui-monospace,monospace;font-size:.8rem;background:var(--bg);
+  border:1px solid var(--line);border-radius:8px;padding:.6rem .8rem;overflow-x:auto;white-space:nowrap}
+footer{margin-top:2rem;color:var(--ink2);font-size:.78rem}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Transmission AV · Digital Totems</div>
+  <h1>Totem Intake Validator</h1>
+  <p class="sub">Drop your content files here before sending them. Everything is
+  checked in your browser — nothing uploads anywhere. Green means your files
+  will program cleanly; fix anything red and re-drop.</p>
+</header>
+
+<h2>Show setup</h2>
+<div class="card">
+  <div class="cfg">
+    <div><label for="show">Show code</label><input id="show" value="SHOW"></div>
+    <div><label for="tot">Totem positions</label><input id="tot" type="number" min="1" max="99" value="12"></div>
+    <div><label for="sw">Screen width px</label><input id="sw" type="number" value="320"></div>
+    <div><label for="sh">Screen height px</label><input id="sh" type="number" value="1080"></div>
+  </div>
+  <div style="margin-top:.9rem"><label style="display:block;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);margin-bottom:.3rem">Show days</label>
+    <div class="days" id="days"></div>
+  </div>
+</div>
+
+<div class="spec" style="margin-top:1rem">POSITION_DAY_TIME_Description.ext &nbsp;→&nbsp; T02_Mon_0850-0950_NoelleRussell-Keynote.jpg · T01+02+12_Wed_0900-0945_MakingItEasier.jpg · ALL_Sun_allday_Agenda.jpg · T03_daily_allday_WiFi.jpg</div>
+
+<div id="drop" tabindex="0" role="button" aria-label="Drop files or click to browse">
+  <b>Drop content files here</b> — or click to browse.<br>
+  Images (JPG/PNG) and video (MP4). Re-dropping the same name replaces its row.
+  <input type="file" id="filein" multiple accept=".jpg,.jpeg,.png,.mp4">
+</div>
+
+<div class="stats" id="stats" hidden>
+  <div class="stat"><b id="nAll">0</b><span>files</span></div>
+  <div class="stat p"><b id="nPass">0</b><span>pass</span></div>
+  <div class="stat w"><b id="nWarn">0</b><span>warnings</span></div>
+  <div class="stat f"><b id="nFail">0</b><span>fail</span></div>
+</div>
+
+<div id="results" hidden>
+  <h2>Files</h2>
+  <div class="tablewrap"><table id="ftab">
+    <thead><tr><th>File</th><th>Status</th><th>Plays</th><th>Media</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+
+  <h2>Coverage — files per position per day</h2>
+  <p class="note">Amber zero-cells have no dedicated content. That can be fine
+  (those screens run the general rotation) — just confirm it's intentional.</p>
+  <div class="gridwrap card" style="padding:.6rem"><table class="cov" id="cov"></table></div>
+
+  <div class="actions">
+    <button class="btn primary" id="dl">Download manifest.json</button>
+    <button class="btn" id="cp">Copy summary</button>
+  </div>
+  <p class="note">Send the manifest along with your files — it lets us start
+  programming immediately.</p>
+</div>
+
+<footer>Transmission AV intake standard v1 · validator runs entirely locally ·
+questions: Bennett Lloyd</footer>
+</div>
+
+<script>
+"use strict";
+const DAYS_ALL = ["Sat","Sun","Mon","Tue","Wed","Thu","Fri"];
+const state = { days: new Set(["Sat","Sun","Mon","Tue","Wed"]), dayOrder: ["Sat","Sun","Mon","Tue","Wed"], files: new Map() };
+const showDays = () => state.dayOrder.filter(d => state.days.has(d));
+const RX = /^(T\d{2}(?:\+\d{2})*|ALL)_(Sat|Sun|Mon|Tue|Wed|Thu|Fri|daily)_(\d{4}-\d{4}|allday)_([A-Za-z0-9-]+)\.(jpe?g|png|mp4)$/;
+
+const $ = id => document.getElementById(id);
+
+// Pre-configure from the link we send the client, e.g.
+//   ?show=ACME&positions=8&days=Thu,Fri,Sat&w=320&h=1080   (hash form #show=... also works)
+try {
+  const q = new URLSearchParams(location.search);          // query params first...
+  new URLSearchParams(location.hash.slice(1)).forEach((v, k) => q.set(k, v));   // ...hash overrides
+  if (q.get("show")) $("show").value = q.get("show");
+  if (q.get("positions")) $("tot").value = q.get("positions");
+  if (q.get("w")) $("sw").value = q.get("w");
+  if (q.get("h")) $("sh").value = q.get("h");
+  if (q.get("days")) {
+    const picked = q.get("days").split(",").map(x => x.trim()).filter(d => DAYS_ALL.includes(d));
+    if (picked.length) { state.days = new Set(picked); state.dayOrder = picked.slice(); }
+  }
+} catch (e) {}
+
+// day chips
+const daysEl = $("days");
+DAYS_ALL.forEach(d => {
+  const b = document.createElement("button");
+  b.textContent = d; b.type = "button";
+  b.className = state.days.has(d) ? "on" : "";
+  b.onclick = () => {
+    if (state.days.has(d)) { state.days.delete(d); }
+    else { state.days.add(d); if (!state.dayOrder.includes(d)) state.dayOrder.push(d); }
+    b.classList.toggle("on"); reevaluate(); };
+  daysEl.appendChild(b);
+});
+["tot","sw","sh","show"].forEach(id => $(id).addEventListener("change", reevaluate));
+
+// drop handling
+const drop = $("drop"), filein = $("filein");
+drop.onclick = () => filein.click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); filein.click(); } };
+filein.onchange = () => { ingest([...filein.files]); filein.value = ""; };
+["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("hover"); }));
+["dragleave","drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("hover"); }));
+drop.addEventListener("drop", e => ingest([...e.dataTransfer.files]));
+
+function hhmmOk(t){ const h=+t.slice(0,2), m=+t.slice(2); return h<=29 && m<=59; } // allow 24xx? no: <=23 for start; handled below
+function fmtBytes(n){ return n>1048576 ? (n/1048576).toFixed(1)+" MB" : Math.round(n/1024)+" KB"; }
+
+async function ingest(list){
+  for (const f of list){
+    const rec = { name:f.name, size:f.size, type:f.type, parsed:null, media:{}, issues:[], status:"pass" };
+    state.files.set(f.name, rec);
+    parseName(rec);
+    try { await probeMedia(f, rec); } catch(e){ rec.issues.push(["w","media unreadable in browser ("+e+") — we'll verify at intake"]); }
+    evalRec(rec);
+  }
+  render();
+}
+
+function parseName(rec){
+  const m = rec.name.match(RX);
+  if (!m){ rec.parsed = null; return; }
+  rec.parsed = { positions:m[1], day:m[2], time:m[3], slug:m[4], ext:m[5].toLowerCase() };
+}
+
+function probeMedia(f, rec){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(f);
+    const done = () => { URL.revokeObjectURL(url); res(); };
+    if (/\.(jpe?g|png)$/i.test(f.name)){
+      const im = new Image();
+      im.onload = () => { rec.media = { kind:"image", w:im.naturalWidth, h:im.naturalHeight }; done(); };
+      im.onerror = () => { URL.revokeObjectURL(url); rej("decode failed"); };
+      im.src = url;
+    } else if (/\.mp4$/i.test(f.name)){
+      const v = document.createElement("video");
+      v.preload = "metadata";
+      v.onloadedmetadata = () => { rec.media = { kind:"video", w:v.videoWidth, h:v.videoHeight,
+        dur:+v.duration.toFixed(1) }; done(); };
+      v.onerror = () => { URL.revokeObjectURL(url); rej("metadata failed"); };
+      v.src = url;
+    } else { rec.media = { kind:"other" }; res(); }
+  });
+}
+
+function evalRec(rec){
+  rec.issues = [];
+  const totMax = +$("tot").value || 12;
+  const SW = +$("sw").value || 320, SH = +$("sh").value || 1080;
+  const target = SW / SH;
+
+  if (!rec.parsed){
+    rec.issues.push(["f","filename doesn't match POSITION_DAY_TIME_Description.ext"]);
+    if (/[ '&#()]/.test(rec.name)) rec.issues.push(["f","contains spaces or special characters"]);
+  } else {
+    const p = rec.parsed;
+    if (p.positions !== "ALL"){
+      for (const tok of p.positions.split("+")){
+        const n = +tok.replace("T","");
+        if (n < 1 || n > totMax) rec.issues.push(["f",`position T${String(n).padStart(2,"0")} outside 1–${totMax}`]);
+      }
+    }
+    if (p.day !== "daily" && !state.days.has(p.day))
+      rec.issues.push(["f",`day "${p.day}" is not a show day`]);
+    if (p.time !== "allday"){
+      const [a,b] = p.time.split("-");
+      if (+a.slice(0,2) > 23 || !hhmmOk(a) || +b.slice(0,2) > 23 || !hhmmOk(b))
+        rec.issues.push(["f","time isn't valid 24-hour HHMM"]);
+      else if (a === b) rec.issues.push(["f","start and end time are identical"]);
+      else if (+b < +a) rec.issues.push(["w","crosses midnight — we'll split it across days; confirm intended"]);
+    }
+  }
+
+  const m = rec.media;
+  if (m.kind === "image" || m.kind === "video"){
+    const ar = m.w / m.h;
+    const exact = (m.w === SW && m.h === SH);
+    const mult  = (m.w % SW === 0) && (m.h % SH === 0) && (m.w / SW === m.h / SH);
+    const close = Math.abs(ar - target) / target <= 0.05;
+    if (exact) {}
+    else if (mult) {}
+    else if (close) rec.issues.push(["w",`${m.w}×${m.h} isn't native ${SW}×${SH} or a multiple — will scale to fill (≤5% stretch)`]);
+    else rec.issues.push(["w",`${m.w}×${m.h} is far from the screen shape (${SW}×${SH}) — will distort or crop; please re-export`]);
+  }
+  if (m.kind === "image" && rec.size > 20*1048576) rec.issues.push(["w","over 20 MB — please re-export smaller"]);
+  if (m.kind === "video"){
+    if (rec.size > 500*1048576) rec.issues.push(["w","over 500 MB"]);
+    if (m.dur > 180) rec.issues.push(["w",`${m.dur}s — over 3 minutes`]);
+    rec.issues.push(["w","frame rate can't be read in-browser — must be ≤30 fps, or we re-encode (see spec)"]);
+  }
+
+  rec.status = rec.issues.some(i => i[0] === "f") ? "fail"
+             : rec.issues.length ? "warn" : "pass";
+}
+
+function reevaluate(){ for (const rec of state.files.values()) evalRec(rec); render(); }
+
+function playsText(rec){
+  if (!rec.parsed) return "—";
+  const p = rec.parsed;
+  const pos = p.positions === "ALL" ? "every totem" : p.positions;
+  const day = p.day === "daily" ? "every day" : p.day;
+  const t = p.time === "allday" ? "all day" : p.time.replace("-","–");
+  return `${pos} · ${day} · ${t}`;
+}
+
+function render(){
+  const recs = [...state.files.values()].sort((a,b)=>a.name.localeCompare(b.name));
+  $("stats").hidden = $("results").hidden = recs.length === 0;
+  if (!recs.length) return;
+  $("nAll").textContent = recs.length;
+  $("nPass").textContent = recs.filter(r=>r.status==="pass").length;
+  $("nWarn").textContent = recs.filter(r=>r.status==="warn").length;
+  $("nFail").textContent = recs.filter(r=>r.status==="fail").length;
+
+  const tb = $("ftab").querySelector("tbody");
+  tb.innerHTML = "";
+  for (const r of recs){
+    const tr = document.createElement("tr");
+    const mediaTxt = r.media.kind === "image" ? `${r.media.w}×${r.media.h} · ${fmtBytes(r.size)}`
+      : r.media.kind === "video" ? `${r.media.w}×${r.media.h} · ${r.media.dur}s · ${fmtBytes(r.size)}`
+      : fmtBytes(r.size);
+    const why = r.issues.length
+      ? `<ul class="why">${r.issues.map(i=>`<li class="${i[0]}">${i[1]}</li>`).join("")}</ul>` : "";
+    tr.innerHTML = `<td class="fn">${r.name}${why}</td>
+      <td><span class="pill ${r.status}">${r.status.toUpperCase()}</span></td>
+      <td>${playsText(r)}</td><td>${mediaTxt}</td>`;
+    tb.appendChild(tr);
+  }
+  renderCoverage(recs);
+}
+
+function renderCoverage(recs){
+  const totMax = +$("tot").value || 12;
+  const days = showDays();
+  const grid = {};
+  for (let i=1;i<=totMax;i++) grid[i] = Object.fromEntries(days.map(d=>[d,0]));
+  for (const r of recs){
+    if (!r.parsed || r.status === "fail") continue;
+    const ds = r.parsed.day === "daily" ? days : [r.parsed.day];
+    const ps = r.parsed.positions === "ALL"
+      ? Array.from({length:totMax},(_,i)=>i+1)
+      : r.parsed.positions.split("+").map(t=>+t.replace("T",""));
+    for (const d of ds) for (const p of ps)
+      if (grid[p] && d in grid[p]) grid[p][d]++;
+  }
+  const cov = $("cov");
+  cov.innerHTML = "<tr><th class='rowh'>Position</th>" +
+    days.map(d=>`<th>${d}</th>`).join("") + "</tr>" +
+    Object.keys(grid).map(p => `<tr><th class='rowh'>T${String(p).padStart(2,"0")}</th>` +
+      days.map(d => { const n = grid[p][d];
+        return `<td class="${n? "cN":"c0"}">${n}</td>`; }).join("") + "</tr>").join("");
+}
+
+$("dl").onclick = () => {
+  const recs = [...state.files.values()];
+  const manifest = {
+    generated: new Date().toISOString(),
+    show: $("show").value, screen: { w:+$("sw").value, h:+$("sh").value },
+    positions: +$("tot").value, days: showDays(),
+    files: recs.map(r => ({ name:r.name, size:r.size, status:r.status,
+      parsed:r.parsed, media:r.media, issues:r.issues.map(i=>i[1]) })),
+  };
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(manifest,null,1)],{type:"application/json"}));
+  a.download = ($("show").value || "show") + "-manifest.json";
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+$("cp").onclick = async () => {
+  const recs = [...state.files.values()];
+  const lines = [
+    `Totem intake summary — ${$("show").value} — ${new Date().toLocaleString()}`,
+    `${recs.length} files: ${recs.filter(r=>r.status==="pass").length} pass, ` +
+    `${recs.filter(r=>r.status==="warn").length} warn, ${recs.filter(r=>r.status==="fail").length} fail`,
+    ...recs.filter(r=>r.status!=="pass").map(r=>`  [${r.status.toUpperCase()}] ${r.name} — ${r.issues.map(i=>i[1]).join("; ")}`)
+  ];
+  try { await navigator.clipboard.writeText(lines.join("\n")); $("cp").textContent = "Copied ✓";
+    setTimeout(()=>$("cp").textContent="Copy summary", 1500); } catch(e){ alert(lines.join("\n")); }
+};
+</script>

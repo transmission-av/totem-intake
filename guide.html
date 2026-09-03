@@ -1,0 +1,208 @@
+<title>Totem Content Guide — Transmission AV</title>
+<style>
+:root{
+  --bg:#F7F8FA; --card:#FFFFFF; --ink:#16181D; --ink2:#5B6472; --line:#E2E5EA;
+  --accent:#3b82f6; --accent-ink:#1d4ed8; --accent-bg:#EAF1FE;
+  --pos:#7C3AED; --pos-bg:#F1EAFD; --day:#0E8A66; --day-bg:#E3F5EE;
+  --time:#C2681B; --time-bg:#FBEFE0; --desc:#B4266A; --desc-bg:#FAE7F0;
+  --good:#188044; --good-bg:#E5F4EB; --bad:#C2362B; --bad-bg:#FAE7E5;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#14161A; --card:#1C1F25; --ink:#E7EAEE; --ink2:#98A1AD; --line:#2A2E36;
+  --accent:#5B9BF8; --accent-ink:#8FBBFA; --accent-bg:#1B2842;
+  --pos:#B08CF5; --pos-bg:#271F3D; --day:#4CC59A; --day-bg:#15302A;
+  --time:#E29A50; --time-bg:#332618; --desc:#EE7EB2; --desc-bg:#361E2B;
+  --good:#4CC077; --good-bg:#1A2E22; --bad:#F07A6E; --bad-bg:#34201D;
+}}
+:root[data-theme="dark"]{
+  --bg:#14161A; --card:#1C1F25; --ink:#E7EAEE; --ink2:#98A1AD; --line:#2A2E36;
+  --accent:#5B9BF8; --accent-ink:#8FBBFA; --accent-bg:#1B2842;
+  --pos:#B08CF5; --pos-bg:#271F3D; --day:#4CC59A; --day-bg:#15302A;
+  --time:#E29A50; --time-bg:#332618; --desc:#EE7EB2; --desc-bg:#361E2B;
+  --good:#4CC077; --good-bg:#1A2E22; --bad:#F07A6E; --bad-bg:#34201D;
+}
+:root[data-theme="light"]{
+  --bg:#F7F8FA; --card:#FFFFFF; --ink:#16181D; --ink2:#5B6472; --line:#E2E5EA;
+  --accent:#3b82f6; --accent-ink:#1d4ed8; --accent-bg:#EAF1FE;
+  --pos:#7C3AED; --pos-bg:#F1EAFD; --day:#0E8A66; --day-bg:#E3F5EE;
+  --time:#C2681B; --time-bg:#FBEFE0; --desc:#B4266A; --desc-bg:#FAE7F0;
+  --good:#188044; --good-bg:#E5F4EB; --bad:#C2362B; --bad-bg:#FAE7E5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 "Segoe UI",-apple-system,"SF Pro Text",system-ui,sans-serif;padding-bottom:4rem}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+header.top{padding:2.4rem 0 1.5rem;border-bottom:3px solid var(--accent);margin-bottom:1.8rem}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+h1{margin:.2rem 0 .4rem;font-size:clamp(1.7rem,4.5vw,2.3rem);letter-spacing:-.015em;text-wrap:balance}
+.lede{color:var(--ink2);margin:0;font-size:1.06rem;max-width:56ch}
+h2{font-size:1.2rem;margin:2.2rem 0 .7rem;letter-spacing:-.01em}
+p{max-width:66ch}
+.muted{color:var(--ink2)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.8rem;margin-top:1rem}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem}
+.step b{display:block;margin-bottom:.2rem}
+.step .n{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;height:1.5rem;
+  border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:.85rem;margin-bottom:.5rem}
+.pattern{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.2rem;margin:1rem 0}
+.pat{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;
+  font-family:Consolas,ui-monospace,monospace;font-size:clamp(.95rem,2.6vw,1.35rem);font-weight:600}
+.seg{padding:.22rem .5rem;border-radius:8px}
+.seg.pos{background:var(--pos-bg);color:var(--pos)}
+.seg.day{background:var(--day-bg);color:var(--day)}
+.seg.time{background:var(--time-bg);color:var(--time)}
+.seg.desc{background:var(--desc-bg);color:var(--desc)}
+.seg.ext{color:var(--ink2)}
+.joiner{color:var(--ink2)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.7rem;margin-top:1.1rem}
+.leg{font-size:.88rem}
+.leg .chip{display:inline-block;font-family:Consolas,ui-monospace,monospace;font-weight:700;font-size:.8rem;
+  padding:.1rem .45rem;border-radius:6px;margin-bottom:.25rem}
+.leg.pos .chip{background:var(--pos-bg);color:var(--pos)}
+.leg.day .chip{background:var(--day-bg);color:var(--day)}
+.leg.time .chip{background:var(--time-bg);color:var(--time)}
+.leg.desc .chip{background:var(--desc-bg);color:var(--desc)}
+.leg div{color:var(--ink2)}
+.exwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th{text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink2);
+  padding:.55rem .8rem;border-bottom:1px solid var(--line)}
+td{padding:.5rem .8rem;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.mono{font-family:Consolas,ui-monospace,monospace;font-size:.82rem;white-space:nowrap}
+.gb{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.8rem;margin-top:.8rem}
+.gcard{border-radius:12px;padding:.85rem 1rem;font-size:.92rem}
+.gcard.good{background:var(--good-bg);border:1px solid var(--good)}
+.gcard.bad{background:var(--bad-bg);border:1px solid var(--bad)}
+.gcard b{display:block;margin-bottom:.35rem}
+.gcard.good b{color:var(--good)} .gcard.bad b{color:var(--bad)}
+.gcard ul{margin:.2rem 0 0;padding-left:1.15rem}
+.gcard li{margin:.2rem 0}
+.gcard .mono{font-family:Consolas,ui-monospace,monospace;font-size:.82rem}
+.speccards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.8rem}
+.spec{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:.95rem 1.05rem}
+.spec h3{margin:0 0 .5rem;font-size:1rem}
+.spec dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.25rem .8rem;font-size:.9rem}
+.spec dt{color:var(--ink2)} .spec dd{margin:0;font-weight:600}
+.callout{background:var(--accent-bg);border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:.85rem 1rem;margin:1.2rem 0;font-size:.95rem;max-width:66ch}
+.check{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:1rem 1.2rem}
+.check ul{margin:.3rem 0 0;padding-left:1.2rem}
+.check li{margin:.35rem 0}
+footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--ink2);font-size:.85rem}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Transmission AV · Digital Totems</div>
+  <h1>Totem Content Guide</h1>
+  <p class="lede">Name your files the way this page shows, and your signage runs
+  itself — right sign, right screen, right minute, all event long, with nobody
+  babysitting a screen.</p>
+</header>
+
+<h2>How it works</h2>
+<div class="steps">
+  <div class="step"><span class="n">1</span><b>You send three things</b>
+    A floor-plan with numbered totem positions, your content files, and your
+    attendee agenda.</div>
+  <div class="step"><span class="n">2</span><b>We pre-program everything</b>
+    Every sign is scheduled to its screen and time window before we even
+    arrive on site.</div>
+  <div class="step"><span class="n">3</span><b>The show runs itself</b>
+    Screens wake up, rotate, switch and go dark on schedule. Our last event ran
+    four days untouched.</div>
+</div>
+
+<h2>The filename does the work</h2>
+<p>Each file tells us <b>where</b> it plays, <b>when</b> it plays, and
+<b>what</b> it is — in one name:</p>
+
+<div class="pattern">
+  <div class="pat">
+    <span class="seg pos">T02</span><span class="joiner">_</span><span class="seg day">Mon</span><span class="joiner">_</span><span class="seg time">0850-0950</span><span class="joiner">_</span><span class="seg desc">NoelleRussell-Keynote</span><span class="seg ext">.jpg</span>
+  </div>
+  <div class="legend">
+    <div class="leg pos"><span class="chip">WHERE</span>
+      <div>Totem number from the map. Several: <b>T01+02+12</b>. Every totem: <b>ALL</b></div></div>
+    <div class="leg day"><span class="chip">WHICH DAY</span>
+      <div><b>Sat Sun Mon Tue Wed…</b> — or <b>daily</b> for every event day</div></div>
+    <div class="leg time"><span class="chip">WHEN</span>
+      <div>24-hour start–end, or <b>allday</b>. 24-hour means we never guess AM/PM</div></div>
+    <div class="leg desc"><span class="chip">WHAT</span>
+      <div>Short name — letters, numbers and hyphens only</div></div>
+  </div>
+</div>
+
+<div class="exwrap"><table>
+  <tr><th>Example</th><th>What it tells us</th></tr>
+  <tr><td class="mono">T02_Mon_0850-0950_NoelleRussell-Keynote.jpg</td>
+      <td>Totem 2, Monday, 8:50–9:50 AM — keynote sign holds the screen</td></tr>
+  <tr><td class="mono">T01+02+12_Wed_0900-0945_MakingItEasier.jpg</td>
+      <td>All three ballroom-entrance totems, Wednesday morning session</td></tr>
+  <tr><td class="mono">T08+09_Mon_1700-2045_ChildrensParty.mp4</td>
+      <td>Video on totems 8 &amp; 9, Monday 5:00–8:45 PM</td></tr>
+  <tr><td class="mono">ALL_Sun_allday_SundayAgenda.jpg</td>
+      <td>Sunday's agenda rotates on every screen, all day Sunday</td></tr>
+  <tr><td class="mono">T03_daily_allday_WiFi-Info.jpg</td>
+      <td>WiFi sign in Totem 3's rotation, every day of the event</td></tr>
+</table></div>
+
+<div class="gb">
+  <div class="gcard good"><b>✓ Helps us help you</b>
+    <ul>
+      <li>24-hour times: <span class="mono">1815-2030</span>, never <span class="mono">6.15-8.30</span></li>
+      <li>Room name + time printed <i>on the artwork</i> for session signs</li>
+      <li>One file per sign, final exports only</li>
+      <li>Replacing a file? Same filename — and tell us</li>
+    </ul></div>
+  <div class="gcard bad"><b>✗ Slows your show down</b>
+    <ul>
+      <li><span class="mono">breakfast.jpg</span>, <span class="mono">CEO-final-FINAL2.jpg</span> — we have to ask what/where/when</li>
+      <li>Vague timing like "after4"</li>
+      <li>Spaces, apostrophes, <span class="mono">&amp; # ( )</span> in names</li>
+      <li>Working files, duplicate export folders, print files mixed in</li>
+    </ul></div>
+</div>
+
+<div class="callout"><b>Why artwork matters twice:</b> we cross-check every
+filename against your agenda <i>and</i> the room/time printed on the sign
+itself. On our last show that catch fixed two mislabeled files before a single
+attendee saw them.</div>
+
+<h2>File specs</h2>
+<div class="speccards">
+  <div class="spec"><h3>🖼 Images</h3>
+    <dl>
+      <dt>Size</dt><dd>Native screen size (we'll tell you, e.g. 320×1080) or an exact multiple</dd>
+      <dt>Format</dt><dd>JPEG (high quality) or PNG</dd>
+      <dt>Color</dt><dd>sRGB</dd>
+      <dt>Max</dt><dd>20 MB per file</dd>
+    </dl></div>
+  <div class="spec"><h3>🎬 Video</h3>
+    <dl>
+      <dt>Format</dt><dd>MP4 · H.264</dd>
+      <dt>Frame rate</dt><dd>30 fps or lower</dd>
+      <dt>Size</dt><dd>Same as images — native or exact multiple</dd>
+      <dt>Audio</dt><dd>None (totems are silent)</dd>
+      <dt>Loops</dt><dd>First and last frame should match</dd>
+      <dt>Max</dt><dd>3 min · 500 MB per file</dd>
+    </dl></div>
+</div>
+
+<h2>Before you hit send</h2>
+<div class="check"><ul>
+  <li>☐ Placement map with numbered positions (<b>T01, T02, …</b>) included</li>
+  <li>☐ Attendee agenda included</li>
+  <li>☐ Every file named to the pattern above</li>
+  <li>☐ Session signs show room + time on the artwork</li>
+  <li>☐ One shared folder (Dropbox works great), <b>5+ days before load-in</b></li>
+</ul></div>
+
+<p class="muted" style="margin-top:1rem">Got our <b>drag-drop checker</b> link?
+Drop your files on it before sending — it flags anything we'd have to ask
+about, in your browser, nothing uploaded.</p>
+
+<footer>Transmission AV — digital totem programming · Questions? Just ask —
+we'd rather answer early than guess late. · Guide v1, Aug 2026</footer>
+</div>
